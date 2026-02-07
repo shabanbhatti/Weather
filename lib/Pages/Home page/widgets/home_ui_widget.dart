@@ -83,7 +83,7 @@ class _HomeUiWidgetState extends ConsumerState<HomeUiWidget>
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),

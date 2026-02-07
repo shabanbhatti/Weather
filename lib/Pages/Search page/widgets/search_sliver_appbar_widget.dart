@@ -9,7 +9,6 @@ import 'package:weather_project/controllers/api_controller.dart';
 import 'package:weather_project/controllers/db_controller.dart';
 import 'package:weather_project/models/search_history_model.dart';
 
-
 class SliverAppBarSearch extends StatefulWidget {
   const SliverAppBarSearch({super.key, required this.controller});
   final TextEditingController controller;
@@ -57,12 +56,12 @@ class _SliverAppBarSearchState extends State<SliverAppBarSearch>
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: Colors.black.withAlpha(50),
+      backgroundColor: Colors.transparent,
       leading: IconButton(
         onPressed: () {
           Navigator.pop(context);
         },
-        icon: Icon(CupertinoIcons.back, color: Colors.white),
+        icon: const Icon(CupertinoIcons.back, color: Colors.white),
       ),
       snap: true,
       floating: true,
@@ -72,7 +71,7 @@ class _SliverAppBarSearchState extends State<SliverAppBarSearch>
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 20),
+              padding: const EdgeInsets.only(right: 20),
               child: Consumer(
                 builder: (context, searchx, child) {
                   return (searchx.watch(isSearchedProvider) == false)
@@ -87,12 +86,12 @@ class _SliverAppBarSearchState extends State<SliverAppBarSearch>
           ],
         ),
       ],
-      shape: RoundedRectangleBorder(),
-      title: Text(
-        'Weather',
+      shape: const RoundedRectangleBorder(),
+      title: const Text(
+        'History',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       ),
-      expandedHeight: 200,
+      expandedHeight: 120,
 
       flexibleSpace: FlexibleSpaceBar(
         background: SlideTransition(
@@ -101,114 +100,105 @@ class _SliverAppBarSearchState extends State<SliverAppBarSearch>
             scale: scale,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(height: 100),
-                Padding(
-                  padding: EdgeInsets.all(15),
-                  child: SizedBox(
-                    height: 40,
-                    child: Consumer(
-                      builder: (context, x, child) {
-                        return TextField(
-                          cursorColor: Colors.white,
-                          controller: widget.controller,
-                          style: TextStyle(color: Colors.white),
-                          onChanged: (value) {
-                            x
-                                .read(filterListProvider.notifier)
-                                .onChanged(value);
-                            x
-                                .read(isControllerEmptyProvider.notifier)
-                                .onChangedControllerEmptyOrNot(value);
-                          },
-                          onSubmitted: (value) async {
-                            var data=await x.read(dbProvider.notifier).fetch()??[];
-                            
-
-                            bool alreadyExists = data.any(
-                              (element) =>
-                                  element.searchHistory?.toLowerCase().trim() ==
-                                  value.toLowerCase().trim(),
-                            );
-
-                            if (!alreadyExists) {
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: SizedBox(
+                      height: 40,
+                      child: Consumer(
+                        builder: (context, x, child) {
+                          return TextField(
+                            cursorColor: Colors.white,
+                            controller: widget.controller,
+                            style: TextStyle(color: Colors.white),
+                            onChanged: (value) {
                               x
-                                  .read(dbProvider.notifier)
-                                  .insert(
-                                    SearchHistoryModel(
-                                      searchHistory: widget.controller.text,
-                                    ),
-                                  );
-                            }
-
-                            if (value.isNotEmpty) {
+                                  .read(filterListProvider.notifier)
+                                  .onChanged(value);
                               x
-                                  .read(apiSerProvider.notifier)
-                                  .fetchWeather(city: widget.controller.text)
-                                  .then((value) {
-                                    x.read(dbProvider.notifier).fetch();
-                                    x
-                                        .read(filterListProvider.notifier)
-                                        .updateList();
-                                    Navigator.of(
-                                      context,
-                                    ).pushNamedAndRemoveUntil(Home.pageName, (route) => false,);
-                                  });
-                              x.read(isSearchedProvider.notifier).foo();
-                            }
-                          },
-                          decoration: InputDecoration(
-                            fillColor: Colors.white.withAlpha(50),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(10),
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            label: const Text(
-                              'Search city',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                                  .read(isControllerEmptyProvider.notifier)
+                                  .onChangedControllerEmptyOrNot(value);
+                            },
+                            onSubmitted: (value) async {
+                              var data =
+                                  await x.read(dbProvider.notifier).fetch() ??
+                                  [];
 
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: Text(
-                        'History',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
+                              bool alreadyExists = data.any(
+                                (element) =>
+                                    element.searchHistory
+                                        ?.toLowerCase()
+                                        .trim() ==
+                                    value.toLowerCase().trim(),
+                              );
+
+                              if (!alreadyExists) {
+                                x
+                                    .read(dbProvider.notifier)
+                                    .insert(
+                                      SearchHistoryModel(
+                                        searchHistory: widget.controller.text,
+                                      ),
+                                    );
+                              }
+
+                              if (value.isNotEmpty) {
+                                x
+                                    .read(apiSerProvider.notifier)
+                                    .fetchWeather(city: widget.controller.text)
+                                    .then((value) {
+                                      x.read(dbProvider.notifier).fetch();
+                                      x
+                                          .read(filterListProvider.notifier)
+                                          .updateList();
+                                      Navigator.of(
+                                        context,
+                                      ).pushNamedAndRemoveUntil(
+                                        Home.pageName,
+                                        (route) => false,
+                                      );
+                                    });
+                                x.read(isSearchedProvider.notifier).foo();
+                              }
+                            },
+                            decoration: InputDecoration(
+                              fillColor: Colors.white.withAlpha(50),
+                              filled: true,
+                              contentPadding: EdgeInsets.all(10),
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Search city',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),

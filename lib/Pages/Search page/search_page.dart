@@ -60,16 +60,15 @@ class _SearchPageState extends State<SearchPage>
     print('SEARCH PAGE BUILD CALLED');
     return BackgroundImgContainer(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black.withAlpha(100),
 
         body: Center(
           child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBarSearch(controller: controller!),
 
               SliverPadding(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.only(top: 10, right: 10),
                 sliver: SliverToBoxAdapter(
                   child: ScaleTransition(
                     scale: scale,
@@ -87,7 +86,7 @@ class _SearchPageState extends State<SearchPage>
                                                 true)
                                             ? OutlinedButton(
                                               style: OutlinedButton.styleFrom(
-                                                side: BorderSide(
+                                                side: const BorderSide(
                                                   color: Colors.white,
                                                 ),
                                               ),
@@ -107,17 +106,17 @@ class _SearchPageState extends State<SearchPage>
                                                       });
                                                 });
                                               },
-                                              child: Text(
+                                              child: const Text(
                                                 'Clear all',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                 ),
                                               ),
                                             )
-                                            : SizedBox(),
+                                            : const SizedBox(),
                               );
                             } else {
-                              return SizedBox();
+                              return const SizedBox();
                             }
                           },
                         ),

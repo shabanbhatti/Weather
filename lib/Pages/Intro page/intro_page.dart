@@ -17,7 +17,6 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
   late Animation<double> opacity;
 
   late Animation<double> scale;
-  
 
   @override
   void initState() {
@@ -38,15 +37,14 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
       duration: const Duration(seconds: 3),
     );
 
-   
-    scale = Tween<double>(begin: 0.0, end: 1.0).animate(
+    scale = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
         parent: rotateAndScaleController,
         curve: Curves.easeInOutBack,
       ),
     );
 
-    opacity = Tween<double>(begin: 0.1, end: 1.0).animate(controller);
+    opacity = Tween<double>(begin: 0.3, end: 1.0).animate(controller);
 
     Future.delayed(const Duration(milliseconds: 50), () {
       rotateAndScaleController.forward();
@@ -57,7 +55,7 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
       if (mounted) {
         Navigator.of(context).pushReplacementNamed(Home.pageName);
       }
-    },);
+    });
   }
 
   @override
@@ -73,38 +71,41 @@ class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
     print('Intro page BUILD CALLED');
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(clear_day),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: AssetImage(clear_day), fit: BoxFit.cover),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ScaleTransition(
-                scale: scale,
-                child: Image.asset(
-                  weatherIcon,
-                  height: 150,
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(40),
-                child: FadeTransition(
-                  opacity: opacity,
-                  child:const Text(
-                    'Weather',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ScaleTransition(
+                      scale: scale,
+                      child: Image.asset(
+                        weatherIcon,
+                        height: 180,
+                        fit: BoxFit.fitHeight,
+                      ),
                     ),
-                  ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: FadeTransition(
+                        opacity: opacity,
+                        child: const Text(
+                          'Weather',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

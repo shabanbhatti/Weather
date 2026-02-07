@@ -62,8 +62,14 @@ class _HomeState extends State<Home> {
                   ),
                   LoadedSuccessfuly(weather: var weather, time: var time) =>
                     HomeUiWidget(weather: weather, time: time),
-                  ErrorState(error: var error) =>
-                    getErrorWidget(error, context, onReload: () =>  myRef.read(apiSerProvider.notifier).fetchWeather(),on404ErrorTitle: '⚠️ Incorrect city name'),
+                  ErrorState(error: var error) => getErrorWidget(
+                    error,
+                    context,
+                    onReload:
+                        () =>
+                            myRef.read(apiSerProvider.notifier).fetchWeather(),
+                    on404ErrorTitle: '❌ City not found!',
+                  ),
                   EmptyState() => const Text('No DATA'),
                 },
           ),
@@ -72,9 +78,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
-
-
-
-
